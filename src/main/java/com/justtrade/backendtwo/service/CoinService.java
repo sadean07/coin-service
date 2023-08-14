@@ -6,8 +6,13 @@ import com.justtrade.backendtwo.repository.DataCoinRepository;
 import ma.glasnost.orika.MapperFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.annotation.RequestScope;
+
+import java.util.List;
+import java.util.Objects;
 
 @Service
+@RequestScope
 public class CoinService {
 
     @Autowired
@@ -16,13 +21,16 @@ public class CoinService {
     @Autowired
     private DataCoinRepository dataCoinRepository;
 
-    /*public void registerUser(RegistrationDto registrationDto){
-        DataUser newDataUser = mapperFacade.map(registrationDto, DataUser.class);
-        dataUserRepository.save(newDataUser);
-    }*/
+    List<DataCoin> listDataCoin;
 
     public CoinResponseDto getCoinDataByCode(String code){
         DataCoin dataCoin = dataCoinRepository.getByCode(code);
         return mapperFacade.map(dataCoin,CoinResponseDto.class);
+    }
+    public List<DataCoin> getListCoin(){
+        if(Objects.isNull(listDataCoin)) {
+            listDataCoin = dataCoinRepository.findAll();
+        }
+        return listDataCoin;
     }
 }
