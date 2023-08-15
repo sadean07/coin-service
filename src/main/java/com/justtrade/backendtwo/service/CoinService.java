@@ -1,5 +1,6 @@
 package com.justtrade.backendtwo.service;
 
+import com.justtrade.backendtwo.dto.CoinDataDto;
 import com.justtrade.backendtwo.dto.CoinResponseDto;
 import com.justtrade.backendtwo.entity.DataCoin;
 import com.justtrade.backendtwo.repository.DataCoinRepository;
@@ -32,5 +33,10 @@ public class CoinService {
             listDataCoin = dataCoinRepository.findAll();
         }
         return listDataCoin;
+    }
+
+    public void saveCoinData(CoinDataDto coinDataDto){
+        DataCoin dataCoin = mapperFacade.map(coinDataDto, DataCoin.class);
+        dataCoinRepository.save(dataCoin);
     }
 }
