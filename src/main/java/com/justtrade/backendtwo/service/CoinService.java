@@ -2,6 +2,7 @@ package com.justtrade.backendtwo.service;
 
 import com.justtrade.backendtwo.dto.CoinDataDto;
 import com.justtrade.backendtwo.dto.CoinResponseDto;
+import com.justtrade.backendtwo.dto.UpdateHargaDto;
 import com.justtrade.backendtwo.entity.DataCoin;
 import com.justtrade.backendtwo.repository.DataCoinRepository;
 import ma.glasnost.orika.MapperFacade;
@@ -28,6 +29,9 @@ public class CoinService {
 
     public CoinResponseDto getCoinDataByCode(String code){
         DataCoin dataCoin = dataCoinRepository.getByCode(code);
+        if(Objects.isNull(dataCoin)){
+            dataCoin = dataCoinRepository.findById(Long.parseLong(code)).orElse(null);
+        }
         return mapperFacade.map(dataCoin,CoinResponseDto.class);
     }
     public List<DataCoin> getListCoin(){
@@ -44,5 +48,11 @@ public class CoinService {
 
     public Page<DataCoin> getAllDataCoin(Pageable pageable) {
         return dataCoinRepository.findAll(pageable);
+    }
+
+    public DataCoin updateDataCoin(String code, UpdateHargaDto updateHargaDto){
+        DataCoin dataCoin = dataCoinRepository.getByCode(code);
+        dataCoin.setHarga(updateHargaDto.getHarga());
+        return dataCoinRepository.save(dataCoin);
     }
 }
