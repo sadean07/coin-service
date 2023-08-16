@@ -6,6 +6,8 @@ import com.justtrade.backendtwo.entity.DataCoin;
 import com.justtrade.backendtwo.repository.DataCoinRepository;
 import ma.glasnost.orika.MapperFacade;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.annotation.RequestScope;
 
@@ -38,5 +40,9 @@ public class CoinService {
     public void saveCoinData(CoinDataDto coinDataDto){
         DataCoin dataCoin = mapperFacade.map(coinDataDto, DataCoin.class);
         dataCoinRepository.save(dataCoin);
+    }
+
+    public Page<DataCoin> getAllDataCoin(Pageable pageable) {
+        return dataCoinRepository.findAll(pageable);
     }
 }
