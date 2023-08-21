@@ -15,12 +15,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/coin-service")
 @Validated
 public class CoinController {
     @Autowired
     private CoinService coinService;
+
     //Api Get All User
     @GetMapping("/data-coins")
     public Page<DataCoin> getAllUser(Pageable pageable){
@@ -47,5 +50,11 @@ public class CoinController {
     public DataCoin updateHargaCoin(@PathVariable @IsCodeValid String code,
                                     @RequestBody @Validated UpdateHargaDto updateHargaDto){
         return coinService.updateDataCoin(code,updateHargaDto);
+    }
+
+    //test
+    @PatchMapping("/data-coins")
+    public List<DataCoin> updateAllCoinPrice(){
+        return coinService.updateAllCoinPrice();
     }
 }

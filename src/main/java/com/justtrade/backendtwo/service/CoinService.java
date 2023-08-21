@@ -1,5 +1,7 @@
 package com.justtrade.backendtwo.service;
 
+import com.justtrade.backendtwo.client.IndodaxClient;
+import com.justtrade.backendtwo.client.dto.IdxSummariesResponseDto;
 import com.justtrade.backendtwo.dto.CoinDataDto;
 import com.justtrade.backendtwo.dto.CoinResponseDto;
 import com.justtrade.backendtwo.dto.UpdateHargaDto;
@@ -21,7 +23,8 @@ public class CoinService {
 
     @Autowired
     private MapperFacade mapperFacade;
-
+    @Autowired
+    private IndodaxClient indodaxClient;
     @Autowired
     private DataCoinRepository dataCoinRepository;
 
@@ -54,5 +57,17 @@ public class CoinService {
         DataCoin dataCoin = dataCoinRepository.getByCode(code);
         dataCoin.setHarga(updateHargaDto.getHarga());
         return dataCoinRepository.save(dataCoin);
+    }
+
+    public List<DataCoin> updateAllCoinPrice(){
+        dataCoinRepository.findAll().stream().forEach(
+                data -> {
+                    IdxSummariesResponseDto idxResponseData = indodaxClient
+                            .getCoinDataFromIndodax(data.getCode().toLowerCase());
+                    data.setHarga(Integer.parseInt(idxResponseData.getDataHarga().getLast()));
+                    dataCoinRepository.save(data);
+                }
+        );
+        return dataCoinRepository.findAll();
     }
 }
